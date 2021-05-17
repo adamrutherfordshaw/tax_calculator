@@ -1,3 +1,5 @@
+const { FuelType } = require("./fuel-type");
+
 let TaxCalculator = class TaxCalculator {
   constructor(year) {
     if (year === undefined) {
@@ -12,13 +14,13 @@ let TaxCalculator = class TaxCalculator {
     return this.year;
   }
 
-  calculateTax({ fuelType, co2Emissions}){
-   if(fuelType === fuelType.PETROL){
-      return this.calculatePetroltax(co2Emissions)
-   }else{
-    return this.calculateDieselTax(co2Emissions)
- }
-                
+  calculateTax({ fuelType, co2Emissions }) {
+    console.log(fuelType);
+    if (fuelType === FuelType.PETROL) {
+      return this.calculatePetroltax(co2Emissions);
+    } else {
+      return this.calculateDieselTax(co2Emissions);
+    }
   }
 
   calculateDieselTax(emissions) {
@@ -39,7 +41,7 @@ let TaxCalculator = class TaxCalculator {
     else price = 2070;
 
     return price;
-    }
+  }
 
   calculatePetroltax(emissions) {
     let price;
