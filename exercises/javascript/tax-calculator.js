@@ -13,8 +13,10 @@ let TaxCalculator = class TaxCalculator {
   }
 
   calculateTax(vehicle) {
-    const emissions = vehicle.co2Emissions;
-    console.log(emissions);
+    return this.calculatePetroltax(vehicle.co2Emissions);
+  }
+
+  calculatePetroltax(emissions) {
     let price;
 
     if (emissions < 1) price = 0;
