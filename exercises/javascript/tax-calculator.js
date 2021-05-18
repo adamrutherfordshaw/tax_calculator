@@ -8,10 +8,16 @@ let TaxCalculator = class TaxCalculator {
     } else {
       this.year = year;
     }
+
+    this.expensiveVehicleTaxToggleOn = false;
   }
 
   getYear() {
     return this.year;
+  }
+
+  turnOnExpensiveVehicleTax() {
+    this.expensiveVehicleTaxToggleOn = true;
   }
 
   calculateDieselTax(emissions) {
@@ -35,16 +41,31 @@ let TaxCalculator = class TaxCalculator {
   }
 
   calculateTax(vehicle) {
-    switch (vehicle.fuelType) {
-      case FuelType.PETROL:
-        return this.calculatePetrolTax(vehicle.co2Emissions);
-      case FuelType.ALTERNATIVE_FUEL:
-        return this.calculateAlternativeTax(vehicle.co2Emissions);
-      case FuelType.DIESEL:
-        return this.calculateDieselTax(vehicle.co2Emissions);
-      case FuelType.ELECTRIC:
-        return 0;
-    }
+    let price = 0;
+
+    if (
+      vehicle.listPrice > 40000 &&
+      this.year > vehicle.dateOfFirstRegistration.getFullYear() &&
+      this.expensiveVehicleTaxToggleOn
+    )
+      price = this.calculateExpensiveVehicleTax(vehicle);
+    else
+      switch (vehicle.fuelType) {
+        case FuelType.PETROL:
+          price = this.calculatePetrolTax(vehicle.co2Emissions);
+          break;
+        case FuelType.ALTERNATIVE_FUEL:
+          price = this.calculateAlternativeTax(vehicle.co2Emissions);
+          break;
+        case FuelType.DIESEL:
+          price = this.calculateDieselTax(vehicle.co2Emissions);
+          break;
+        case FuelType.ELECTRIC:
+          price = 0;
+          break;
+      }
+
+    return price;
   }
 
   calculatePetrolTax(emissions) {
@@ -82,6 +103,24 @@ let TaxCalculator = class TaxCalculator {
     else if (emissions < 226) price = 1230;
     else if (emissions < 256) price = 1750;
     else price = 2060;
+
+    return price;
+  }
+
+  calculateExpensiveVehicleTax(vehicle) {
+    let price = 0;
+
+    switch (vehicle.fuelType) {
+      case FuelType.PETROL || FuelType.DIESEL:
+        price = 450;
+        break;
+      case FuelType.ALTERNATIVE_FUEL:
+        price = 440;
+        break;
+      case FuelType.ELECTRIC:
+        price = 310;
+        break;
+    }
 
     return price;
   }
